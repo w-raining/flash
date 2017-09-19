@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>封装</title>
+    </head>
+    <style>
+	.box{
+		width: 100px;
+		height: 100px;
+		background: red;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+	.box:nth-child(2){
+		background: green;
+		position: absolute;
+		top: 50px;
+		left: 80px;
+	}
+	.box:nth-child(3){
+		background: pink;
+		position: absolute;
+		top: 100px;
+		left: 150px;
+	}
+	.box:nth-child(4){
+		background: #000;
+		position: absolute;
+		top: 150px;
+		left: 200px;
+	}
+
+
+
+    </style>
+    <body>
+	<div class="box"></div>
+	<div class="box"></div>
+	<div class="box"></div>
+	<div class="box"></div>
+	<div class="box"></div>
+    </body>
+</html>
+<script>
+			let box = document.querySelectorAll('.box');
+			box.forEach(function(value,index){
+				
+				down(value);
+			})
+			function down(obj){
+				obj.onmousedown = function(e){
+					let ox=e.offsetX,oy=e.offsetY;
+					this.onmousemove = function(e){
+						let cx = e.clientX,cy = e.clientY;
+						this.style.left = cx-ox+'px';
+						this.style.top = cy-oy+'px';
+					}
+					this.onmouseup = function(){
+						this.onmousemove=null;
+						this.onmouseup=null;
+					}
+				}
+			}
+	
+		
+	
+
+
+
+
+
+
+
+
+
+</script>

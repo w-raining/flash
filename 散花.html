@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <style>
+	.point{
+		width: 1px;
+		height: 1px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		margin: auto;
+
+
+	}
+	.circle{
+		width: 100px;
+		height: 100px;
+		border-radius: 50%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		background: blue;
+		transition: all ease 0.8s;
+	}
+	button{
+		width: 50px;
+		height:30px;
+		background: #ccc;
+		}
+
+
+
+
+
+
+
+
+
+
+    </style>
+    <body>
+    <button>点击</button>
+    <div class="point"></div>
+    </body>
+</html>
+<script>
+    let point = document.querySelector('div');
+    let button = document.querySelector('button');
+	let ch= window.innerHeight,cw= window.innerWidth;
+	let ele=[];
+	let pos=[];
+	let colorArr=[0,3,6,9,'f'];
+	for(let i=0;i<20;i++){
+		let tops,lefts;
+		let divs = document.createElement('div');
+		divs.className='circle';
+		//颜色
+		divs.style.background=getColor();
+		//大小
+		/*let w=Math.floor(Math.random()*100);
+		let h=Math.floor(Math.random()*100);
+		divs.style.width=w;
+		divs.style.height=h;*/
+
+		do{
+			
+			lefts = Math.random()*(cw-100)-cw/2;
+			tops = Math.random()*(ch-100)-ch/2;
+		}while(checkPos(lefts,tops))
+		//随机产生位置
+		
+		point.appendChild(divs);
+		ele.push(divs);
+		pos.push({lefts,tops});
+
+	}
+	setTimeout(function(){
+		button.onclick = function(){
+			ele.forEach(function(value,index){
+				value.style.left=pos[index].lefts+'px';
+				value.style.top=pos[index].tops+'px';
+			})
+		}
+		
+	}, 100)
+
+	//颜色
+	function getColor(){
+		let color='#';
+		for(let i=0;i<3;i++){
+			let num = Math.floor(Math.random()*colorArr.length);
+			color+=colorArr[num]
+		}
+		return color;
+	}
+
+	//判断位置
+	function checkPos(l,f){
+		return pos.some(function(value){
+			return l+100>value.lefts&&l<value.lefts+100&&f+100>value.tops&&f<value.tops+100;
+		})
+	}
+
+</script>
+
+<script>
+	
+
+function getColor(){
+	let r=Math.floor(Math.random()*256);
+	let g=Math.floor(Math.random()*256);
+	let b=Math.floor(Math.random()*256);
+	return `rgb(${r}${g}${b})`
+}
+
+
+/*	var arr=[1,2,1,2,3,5];
+	var ss = arr.some(function(value,index){
+		return value<0
+	})
+	alert(ss);*/
+
+</script>
+
+
+
+
+
+
+

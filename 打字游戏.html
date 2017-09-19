@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>游戏</title>
+</head>
+<style>
+    .back{
+        width: 100%;
+        height: 600px;
+        background: url("img/b1.jpg") center center no-repeat;
+        background-size: cover;
+        position: relative;
+    }
+    .back p{
+        width: 80px;
+        height: 30px;
+        background: rgba(255,255,255,.8);
+        position: absolute;
+        top: 0;
+        left:10px;
+        color:red;
+        border-radius:50%;
+        text-align: center;
+        line-height: 30px;
+        font-weight: bold;
+    }
+    .back .sm{
+        position: absolute;
+        top: 50px;
+        left:10px;
+    }
+    .back span{
+        display: inline-block;
+        width: 100px;
+        height:15px;
+        background: rgba(255,255,255,.8);
+        border-radius: 5px;
+        position: absolute;
+        top: 8px;
+        left:90px;
+        line-height: 15px;
+    }
+    .back .life1{
+        background:rgba(255,255,255,.3);
+    }
+    @keyframes yun {
+        from{
+            left:30%;
+        }
+        to{
+            left:80%;
+        }
+
+    }
+    .back .flower{
+        width: 250px;
+        height: 150px;
+        border-radius: 50%;
+        position: absolute;
+        top:30px;
+        left:200px;
+        background: url("img/yun.png") center center no-repeat;
+        background-size: contain;
+        animation: yun 5s  linear .1s  infinite alternate;
+    }
+    .back .flower>img{
+        width: 100%;
+        height:100%;
+    }
+    .back .flower1{
+        width: 250px;
+        height: 150px;
+        border-radius: 50%;
+        position: absolute;
+        top:30px;
+        left:300px;
+        background: url("img/yun2.png") center center no-repeat;
+        background-size: contain;
+        animation: yun 3s  linear .1s  infinite alternate;
+    }
+    .back .flower1>img{
+        width: 100%;
+        height:100%;
+    }
+
+</style>
+<body>
+    <div class="back">
+        <div class="flower1"></div>
+        <div class="flower"></div>
+        <p>分数:<span class="score">0</span></p>
+        <!--<p>生命:<span class="life">10</span></p>-->
+        <p class="sm">生命:<span class="life"></span><span class="life1"></span></p>
+    </div>
+</body>
+</html>
+<script>
+    function Game(){
+        this.charArr=[
+            ['Q','img/b1.png'],
+            ['W','img/2.jpg'],
+            ['E','img/3.jpg'],
+            ['R','img/4.jpg'],
+            ['T','img/5.jpg'],
+            ['Y','img/6.jpg'],
+            ['U','img/7.jpg'],
+            ['I','img/8.jpg'],
+            ['O','img/9.jpg'],
+            ['P','img/10.jpg'],
+            ['A','img/111.jpg'],
+            ['S','img/12.jpg'],
+            ['D','img/13.jpg'],
+            ['F','img/14.jpg'],
+            ['G','img/15.jpg'],
+            ['H','img/16.jpg'],
+            ['J','img/17.jpg'],
+            ['K','img/18.jpg'],
+            ['L','img/19.jpg'],
+            ['Z','img/20.jpg'],
+            ['X','img/21.jpg'],
+            ['C','img/22.jpg'],
+            ['V','img/23.jpg'],
+            ['B','img/24.jpg'],
+            ['N','img/25.jpg'],
+            ['M','img/26.jpg']
+                     ];
+        this.strLength=5;
+        this.cw = window.innerWidth;
+        this.currentArr=[];
+        this.speed=10;
+        this.arrPos=[];
+        this.life = document.querySelector('.life');
+        this.life1 = document.querySelector('.life1');
+        this.score = document.querySelector('.score');
+        this.lifeElement = 10;
+        this.scoreElement = 0;
+        this.gq=10;
+    }
+    Game.prototype={
+        start(){
+            this.getElement(this.strLength);
+            this.Drop();
+            this.Key();
+        },
+        getElement(length){
+            for(let i=0;i<length;i++){
+                this.charCreat();
+            }
+        },
+        checkEle(text){
+            return this.currentArr.some(function(value){
+                return value.innerText==text;
+            })
+        },
+        checkPos(lefts){
+            return this.arrPos.some(function(value){
+                return lefts+50>value&&value+50>lefts;
+            })
+        },
+        charCreat(){
+            let num = Math.floor(Math.random()*this.charArr.length);
+            let tops = Math.floor(Math.random()*100);
+            let lefts = Math.floor(Math.random()*(this.cw-400)+200);
+            while(this.checkEle(this.charArr[num][0])){
+                num = Math.floor(Math.random()*this.charArr.length);
+            }
+            while(this.checkPos(lefts)){
+                lefts = Math.random()*(this.cw-400)+200;
+            }
+            let ele = document.createElement('div');
+            ele.style.cssText=`width:100px;height:100px;background-image:url(${this.charArr[num][1]});
+            background-position:center center;background-size:cover;border-radius:50%;color:rgba(0,0,0,0);position:absolute;
+            top:${tops}px;left:${lefts}px;`;
+            document.body.appendChild(ele);
+            ele.innerText = this.charArr[num][0];
+            this.currentArr.push(ele);
+            this.arrPos.push(lefts);
+        },
+        Drop(){
+            let self=this;
+            self.t=setInterval(function(){
+                for(let i=0;i<self.currentArr.length;i++){
+                    let tops = self.currentArr[i].offsetTop + self.speed;
+                    self.currentArr[i].style.top=tops +'px';
+                    if(tops>=500){
+                        document.body.removeChild(self.currentArr[i]);
+                        self.currentArr.splice(i,1);
+                        self.arrPos.splice(i,1);
+                        self.lifeElement--;
+                        self.life.innerText=self.lifeElement;
+
+                       //方法二
+                        // 进度条
+                        self.life1.style.width = self.lifeElement/10*100+'%';
+
+
+                        if(self.lifeElement<=0/*||life1.style.width*/){
+                            let flag = window.confirm('游戏已结束，需要重新来过吗？');
+                            if(flag){
+                                self.reStart();
+                            }else{
+                                close();
+                            }
+                        }
+                    }
+                }
+                //重新产生
+                if(self.currentArr.length<self.strLength){
+                    self.charCreat();
+                }
+            },500)
+        },
+        Key(){
+            document.body.onkeydown = function(e){
+                let code =String.fromCharCode(e.keyCode);
+                for(let i=0;i<this.currentArr.length;i++){
+                    if(code == this.currentArr[i].innerText){
+                        document.body.removeChild(this.currentArr[i]);
+                        this.currentArr.splice(i,1);
+                        this.arrPos.splice(i,1);
+                        this.scoreElement++;
+                        this.score.innerText=this.scoreElement;
+                    }
+                    if(this.scoreElement>=this.gq){
+                        this.next();
+                    }
+                    if(this.currentArr.length<this.strLength){
+                        this.charCreat();
+                    }
+                }
+            }.bind(this)
+        },
+        next(){
+            clearInterval(this.t);
+            for(let i=0;i<this.currentArr.length;i++){
+                document.body.removeChild(this.currentArr[i]);
+            }
+            this.currentArr=[];
+            this.arrPos=[];
+            this.gq+=10;
+            this.strLength++;
+            this.speed+=10;
+            this.start();
+
+        },
+        reStart(){
+            clearInterval(this.t);
+            for(let i=0;i<this.currentArr.length;i++){
+                document.body.removeChild(this.currentArr[i]);
+            }
+            this.currentArr=[];
+            this.arrPos=[];
+            this.lifeElement=10;
+            this.life.innerText=this.lifeElement;
+            this.scoreElement=0;
+            this.score.innerText=this.scoreElement;
+            this.start();
+        }
+    }
+
+
+    let game = new Game();
+    game.start();
+
+
+</script>

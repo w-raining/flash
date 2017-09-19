@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <style>
+	.circle{
+		width: 10px;
+		height: 10px;
+		background: red;
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		border-radius: 50%;
+		transition: all 1s ease;
+	}
+	.point{
+		width: 1px;
+		height: 1px;
+		background: red;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+		border-radius: 50%;
+	}
+
+
+    </style>
+    <body>
+    <button>点击</button>
+    <div class='point'></div>
+    </body>
+</html>
+<script>
+	//数学方法
+   /* let rad = 30/180*Math.PI;
+	console.log(Math.sin(rad));*/
+
+
+	//思路
+	//1、创建60个圆   div
+	//2、获取每个圆的位置
+	//3、让每个圆依次出现
+
+	let buttons = document.querySelector('button');
+	let point = document.querySelector('.point');   //因为要获取后面的每一个元素，所以要现在页面中创建一个元素
+	//获取半径，弧度变成角度的一个比例
+	let r=100,bili=Math.PI/180;
+
+	buttons.onclick = function(){
+		for(let i=0;i<360;i++){
+			let j=i;
+    		if(i%60==0){
+    			r+=30;
+    			j=i%60;	
+    		}
+    		let deg = j*6*bili;//得到每一个圆的弧度
+			let ele = document.createElement('div');  //新增一个元素
+			ele.className='circle';  //给这个元素一个样式
+			ele.style.transitionDelay=i*50+'ms';   // 每一个小球出现的时间间隔
+
+			//每一个小球的位置
+			let lefts = r*Math.cos(deg);
+			let tops = r*Math.sin(deg);
+
+			//输入到页面
+			point.appendChild(ele);
+
+			//时间函数  让次过程执行一次
+   	    	setTimeout(function(){
+   	    		ele.style.left=lefts+'px';
+   	    		ele.style.top=tops+'px';
+   	    	},10);
+		
+			
+		}
+		
+	}
+	
+
+
+
+</script>
+
+<!-- setTimeout() -->

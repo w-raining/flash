@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    *{
+        list-style: none;
+        padding:0;
+        margin:0;
+    }
+    .box{
+        width: 300px;
+        height: 300px;
+        background: red;
+        margin:50px auto;
+    }
+    .box .son{
+        width: 29px;
+        height:29px;
+        background: #0085d0;
+        border: 1px solid #cccccc;
+        border-bottom:0;
+        border-right:0;
+        float:left;
+    }
+</style>
+<body>
+    <div class="box">
+        <!--<div class="son"></div>-->
+    </div>
+</body>
+</html>
+<script>
+    let  box =  document.querySelector('.box');
+    let son = document.querySelector('.son');
+    let ps = document.querySelector('p');
+    let body = document.querySelector('body');
+    /*box.onclick = function(e){
+        if(e.target.nodeName=='P'){
+            e.target.style.background='yellow';
+        }
+    }*/
+    /*box.onclick = function(e){
+        console.log(e);
+      e.stopPropagation();
+           alert('box')
+    }*/
+    for(let i=0;i<100;i++){
+            box.innerHTML+= `<div class="son"></div>`;
+    }
+    box.addEventListener('click',function(e){
+        console.log(e)
+        e.target.style.background = getColor();
+    },false)
+
+
+    function getColor(){
+        let color = '#';
+        let arrColor = [0,2,5,6,7,'f','d','c'];
+        for(let i=0;i<3;i++){
+            let num = Math.floor(Math.random()*arrColor.length);
+            color += arrColor[num];
+        }
+        return color;
+    }
+
+</script>
+
+
+
+
+
+
+<script>
+    /*
+    事件流：当页面元素触发事件的时候，该元素以及整个页面
+    会按照某一个特定的顺序响应改元素的事件，事件传播的顺序就叫做事件流
+
+    分类：
+    冒泡型事件：最明确的事件源到最不明确的事件  子级——>父级 依次向上触发
+        添加方式   onclikc          addEventListener
+    *
+    *捕获型事件流：最不明确的事件源到最明确的事件   父级——>子级  依次向下触发
+    *   添加方式   obj.addEventListener(obj,function(){},true)
+    *
+    *阻止事件流
+    * obj.stopPropagation();
+    *
+    *相同事件之间才会响应
+    *
+    *目标事件源的对象 e.target    能够知道是谁触发的该事件
+    *
+    * 事件源   事件对象    目标事件源的对象
+    *   box      e          e.target  可能为box,son
+    *
+    * 判断点击的是哪个元素     e.target.nodeName =='P';
+    *
+    *
+    * 事件委派  son—>box    将son要做的事情交给box    不分先后顺序
+    * 要给好多元素添加同一个事件的时候用到事件委派元素
+    * 用JS脚本动态创建的也需要元素也需要使用到   留言板的背景颜色变化的时候
+    *
+    *
+    *
+    **/
+    //  obj.innerHTML +=   `<div class='son'></div>`    // 添加标签对
+
+</script>

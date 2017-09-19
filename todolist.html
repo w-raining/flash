@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #a1d9f2;
+    }
+
+    header {
+        width: 100%;
+        height: 60px;
+        background: #000;
+    }
+
+    header > input {
+        display: block;
+        width: 300px;
+        height: 40px;
+        margin: -10px auto;
+        border: 0;
+        outline: none;
+        padding: 0 10px;
+    }
+
+    section {
+        width: 1000px;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    section > h1 {
+        width: 100%;
+        height: 50px;
+        color: #fff;
+        font-size: 26px;
+        margin: 0 auto;
+        text-align: center;
+        position: relative;
+    }
+
+    section > h1 > span {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        right: 100px;
+        font-size: 16px;
+    }
+
+    section > ul {
+        width: 100%;
+        height: auto;
+        color: #ff4400;
+        font-size: 20px;
+        margin: 0 auto;
+    }
+
+    section li {
+        width: 80%;
+        height: 50px;
+        border-left: 2px solid #eb9316;
+        color: #fff;
+        font-size: 20px;
+        margin: 0 auto;
+        margin-bottom: 10px;
+        background: #5bc0de;
+        line-height: 50px;
+        padding: 0 0 0 30px;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    section > h2 {
+        width: 100%;
+        height: 50px;
+        color: #fff;
+        font-size: 26px;
+        margin: 0 auto;
+        text-align: center;
+        position: relative;
+    }
+
+    section > h2 > span {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        right: 100px;
+        font-size: 16px;
+    }
+
+    section button {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #eb9316;
+        position: absolute;
+        top: 15px;
+        right: 10px;
+        text-align: center;
+        font-size: 16px;
+        line-height: 20px;
+        color: #5cb85c;
+        font-weight: bold;
+        border: none;
+    }
+
+    section input {
+        border: none;
+        border-radius: 5px;
+        position: absolute;
+        top: 18px;
+        left: 10px;
+    }
+
+</style>
+<body>
+<header>&nbsp;
+    <input type="text" placeholder="请输入" class="inputs">
+</header>
+<section>
+    <h1>未完成的事 <span id="todoCount">2</span></h1>
+    <ul class="todoList">
+
+    </ul>
+    <h2>已完成的事 <span id="doneCount">2</span></h2>
+    <ul class="doneList">
+
+    </ul>
+</section>
+</body>
+</html>
+<script>
+    window.onload = function () {
+        let todo = document.querySelector('.todoList');
+        let done = document.querySelector('.doneList');
+        let todoCount = document.querySelector('#todoCount');
+        let doneCount = document.querySelector('#doneCount');
+        let inputs = document.querySelector('.inputs');
+
+        load();
+
+        //load
+        function load() {
+            let data = localStorage.todo;
+            let todoNum = 0, doneNum = 0, todoString = '', doneString = '';
+            if (!data) {
+                init();
+            }
+            data = JSON.parse(localStorage.todo);
+            data.forEach(function (value, index) {
+                if (value.done) {
+                    doneNum++;
+                    doneString += `
+                        <li id="${index}">
+                            <input type="checkbox">
+                            <p contenteditable="true" type="ps">${value.title}</p>
+                            <button>—</button>
+                        </li>
+                    `;
+                } else {
+                    todoNum++;
+                    todoString += `
+                        <li id="${index}">
+                            <input type="checkbox">
+                            <p contenteditable="true" type="ps1">${value.title}</p>
+                            <button>—</button>
+                        </li>
+                    `;
+                }
+            })
+            done.innerHTML = doneString;
+            todo.innerHTML = todoString;
+            doneCount.innerHTML = doneNum;
+            todoCount.innerHTML = todoNum;
+        }
+
+        //初始化  init
+        function init() {
+            let things = [
+                {'title': '找房子', 'todo': false},
+                {'title': '找工作', 'todo': false},
+                {'title': '吃饭', 'done': true},
+                {'title': '睡觉', 'done': true},
+            ];
+            localStorage.todo = JSON.stringify(things);
+        }
+
+        //add  最上面的input的添加
+        function add(obj) {
+            let data = getData();
+            data.push(obj);
+            saveData(data);
+            load();
+        }
+
+        //getData   获取元素
+        function getData() {
+            let data = localStorage.todo;
+            return JSON.parse(data);
+        }
+
+        //saveDate
+        function saveData(data) {
+            localStorage.todo = JSON.stringify(data)
+        }
+
+        //点击input
+        inputs.onkeydown = function (e) {
+            if (e.keyCode == 13) {
+                if (this.value.trim().length == 0) {
+                    return;
+                }
+                add({'title': this.value.trim(), 'todo': true})
+                this.value = '';
+            }
+        }
+
+
+        //多选按钮的功能
+        todo.onclick = function (e) {
+            let obj = e.target;
+            let id = obj.parentNode.id;
+            if (obj.nodeName == 'INPUT') {
+                finishRe(id);
+            } else if (obj.nodeName == 'BUTTON') {
+                del(id);
+            } else if(obj.nodeName == 'P'){
+                obj.onblur = function(){
+                    let value = obj.innerText;
+                    update(id,value);
+                }
+            }
+
+        }
+        done.onclick = function (e) {
+            let obj = e.target;
+            let id = obj.parentNode.id;
+            if (obj.nodeName == 'INPUT') {
+                finish(id);
+            } else if (obj.nodeName == 'BUTTON') {
+                del(id);
+            } else if(obj.nodeName == 'P'){
+                obj.onblur = function(){
+                    let value = obj.innerText;
+                    update(id,value);
+                }
+            }
+        }
+        //finish
+
+        function finishRe(id) {
+            let data = getData();
+            data[id].done = true;
+            saveData(data);
+            load();
+        }
+        function finish(id) {
+            let data = getData();
+            data[id].done = false;
+            saveData(data);
+            load();
+        }
+
+        //del
+        function del(id) {
+            let data = getData();
+            data.splice(id, 1);
+//            data[id].style.transform=`translateX80%`;
+            saveData(data);
+            load();
+        }
+
+        /*
+         del.style.transform=`translateX(500px)`;
+         del.addEventListener('webkitTransitionEnd',function(){
+         table.removeChild(del);
+         },false)
+         */  //截取的另u一种方法
+
+        //p标签里面的内容更新
+        function update(id,value){
+           let data = getData();
+           data[id].title = value;
+           saveData(data);
+           load();
+        }
+
+
+
+
+        //onload
+    }
+
+</script>

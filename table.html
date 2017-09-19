@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .box{
+        width: 500px;
+        height:auto;
+        background: #46B7D6;
+        margin:50px auto;
+        text-align: center;
+        padding: 20px 0;
+        border-radius: 5px;
+        overflow: auto;
+        overflow: hidden;
+    }
+    h1{
+        color:#fff;
+        font-size: 24px;
+    }
+    table{
+        border-collapse:collapse;
+        text-align: center;
+    }
+    button{
+        display: inline-block;
+        width: 50px;
+        height:25px;
+        background:#0085d0;
+        border: none;
+        text-align: center;
+        line-height: 25px;
+        border-radius: 5px;
+        color: #fff;
+        margin-right: 10px;
+
+    }
+    table th{
+        width:18%;
+        font-size: 18px;
+        text-align: center;
+    }
+    table tr{
+        width:100%;
+        text-align: center;
+        color:#fff;
+        transition: all ease 1s;
+    }
+    table tr td{
+        width: 18%;
+        padding:5px 0;
+    }
+    .btn{
+        display: block;
+        float: right;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+    input{
+        width:60px;
+    }
+</style>
+<body>
+    <div class="box">
+        <h1>学生信息</h1>
+        <table>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>年龄</th>
+            <th>籍贯</th>
+            <th>电话</th>
+            <th>操作</th>
+        </table>
+        <button class="btn">添加</button>
+    </div>
+
+</body>
+</html>
+<script>
+    let student=[
+        {'name':'顾小艾','sex':'女','age':'20','addres':'天津','phone':'123456'},
+        {'name':'凉生','sex':'男','age':'30','addres':'北京','phone':'465456'},
+        {'name':'乐小米','sex':'女','age':'20','addres':'上海','phone':'132123'},
+        {'name':'厉爵风','sex':'男','age':'30','addres':'杭州','phone':'565656'}
+    ];
+    let table = document.querySelector('tbody');
+    let btn = document.querySelector('.btn');
+    let btns = document.querySelector('.btns');
+
+    load();
+    //加载
+    function load(){
+        let data = localStorage.student;
+        if(!data){
+            init();
+        }
+        data = JSON.parse(localStorage.student);
+        table.innerHTML='';
+        data.forEach(function(value,index){
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                    <td type="name"> ${value.name}  </td>
+                    <td type="sex"> ${value.sex}   </td>
+                    <td type="age"> ${value.age}   </td>
+                    <td type="addres"> ${value.addres}</td>
+                    <td type="phone"> ${value.phone} </td>
+                    <td class="btns"><button>删除</button></td>
+                                `;
+            table.appendChild(tr);
+            tr.id=index;
+        })
+
+    }
+    //初始化
+    function init(){
+            let student=[
+                {'name':'顾小艾','sex':'女','age':'20','addres':'天津','phone':'123456'},
+                {'name':'凉生','sex':'男','age':'30','addres':'北京','phone':'465456'},
+                {'name':'乐小米','sex':'女','age':'20','addres':'上海','phone':'132123'},
+                {'name':'厉爵风','sex':'男','age':'30','addres':'杭州','phone':'565656'}
+            ];
+           localStorage.student = JSON.stringify(student);
+    }
+
+
+
+
+    table.ondblclick = function(e) {
+        let obj = e.target;
+        if (obj.nodeName == 'TD' && obj.className != '.btns') {
+            let input = document.createElement('input');
+            let oldv = obj.innerText;
+            input.value = oldv;
+            obj.innerText = '';
+            obj.appendChild(input);
+            input.onblur = function () {
+                let newv = input.value;
+                obj.removeChild(input);
+                newv = newv.trim() ? newv.trim() : oldv;
+                obj.innerText = newv;
+                let id=obj.parentNode.id,type=obj.getAttribute('type');
+                update(id,type,newv);
+            }
+        }else if(obj.nodeName == 'BUTTON'){
+             let tr=obj.parentNode.parentNode;
+             tr.style.transform = 'translateX(500px)';
+             tr.addEventListener('webkitTransitionEnd',function(){
+                 table.removeChild(tr);
+             },false)
+             let id=tr.id;
+             del(id);
+        }
+
+    }
+
+    //update
+    function update(id,type,value){
+        let data = JSON.parse(localStorage.student);
+        data[id][type]=value;
+        localStorage.student=JSON.stringify(data);
+
+    }
+
+    //del
+    function del(id){
+        let data  = JSON.parse(localStorage.student);
+        data.splice(id,1);
+        localStorage.student=JSON.stringify(data);
+        load();
+    }
+
+    //add
+    function addData(obj){
+        let data=JSON.parse(localStorage.student);
+        data.push(obj);
+        localStorage.student=JSON.stringify(data);
+        load();
+    }
+
+
+
+    btn.onclick = function () {
+         let tr = document.createElement('tr');
+         tr.innerHTML =`
+             <td>顾小艾</td>
+             <td>女</td>
+             <td>20</td>
+             <td>上海</td>
+             <td>123456456</td>
+             <td class="btns"><button>删除</button></td>
+                `;
+         table.appendChild(tr);
+        addData({'name':'顾小艾','sex':'女','age':'20','addres':'上海','phone':'193846552'});
+
+     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<script>
+    /*编辑ｔｄ　　  事件委派     td——>table
+    * 创建input保存当前内容
+    * 单元格内容 ——>  input
+    * 单元格清空
+    * input——>  单元格          onfocus(获得焦点)           onblur(失去焦点)
+    *
+    *
+    * 编辑之后
+    * 保存input.value
+    * input ——> remove
+    * input.value ——> td
+    * obj.innerText='';
+    *
+    *
+    *
+    *
+    * */
+
+</script>

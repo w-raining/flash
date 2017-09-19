@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文本域  blog</title>
+</head>
+<style>
+    *{
+        list-style:none;
+        padding:0;
+        margin:0;
+
+    }
+    html,body{
+        background:#43ADD7;
+    }
+    .content{
+        width:800px;
+        height:200px;
+        background:#fff;
+        margin:50px auto;
+        position: relative;
+    }
+    .content>textarea{
+        display: block;
+        width:600px;
+        height:100px;
+        background:#fff;
+        margin:15px auto;
+        resize: none;
+    }
+    .content .zi{
+        width:360px;
+        height:30px;
+        float: right;
+        text-align: center;
+        line-height: 40px;
+        margin-right: 5px;
+        background: #fff;
+        color:#ccc;
+        font-size: 14px;
+        position: relative;
+
+    }
+    .content p{
+    	width:360px;
+        height:30px;
+    	position: absolute;
+    	top: 0;
+    	left: 0;
+    	background: #fff;
+    }
+    .content .num{
+    	width:360px;
+        height:30px;
+        background: #fff;
+    }
+    .content .num1{
+    	width:250px;
+        height:30px;
+        background: #fff;
+        display: none;
+    }
+    .content p>span{
+        font-weight: bold;
+        color:#ccc;
+    }
+    .content p>a{
+    	display: inline-block;
+    	color: #796F6F;
+    	cursor: pointer;
+    }
+    .content button{
+        width: 70px;
+        height:30px;
+        background: #99D42C;
+        float:right;
+        margin-right: 100px;
+        border: none;
+        text-align: center;
+        line-height: 30px;
+        color:#fff;
+    }
+    .content .comment{
+        width: 100%;
+        height:auto;
+        margin-top:70px;
+        background: #fff;
+    }
+    .content .comment>li{
+        width: 100%;
+        height:50px;
+        background: #fff;
+        margin-top: 10px;
+        border-top: 1px solid #ccc;
+        padding: 13px;
+        box-sizing: border-box;
+    }
+</style>
+<body>
+
+    <!--<div contenteditable="true">你好</div>            &lt;!&ndash;div的内容可以进行编辑&ndash;&gt;-->
+    <div class="content">&nbsp;
+        <textarea name="" id="" cols="30" rows="10" value=""></textarea>
+        <button>广播</button>
+
+        <div class="zi">
+        	<p class="num1">您已经超出<span class='span3'>0</span>个字,建议您转换成<a class='a4' src=''>长微博</a></p>
+            <p class="num">最大输入字符是100字，目前已经输入<span class="span1">0</span>字,还能输入<span class="span2">100</span>字</p>
+           
+        </div>
+
+        <ul class="comment">
+            <li>欢迎来到你的世界</li>
+        </ul>
+    </div>
+
+
+</body>
+</html>
+<script>
+    let text = document.querySelector('textarea'),
+        span1 = document.querySelector('.span1'),
+        span2 = document.querySelector('.span2'),
+        span3 = document.querySelector('.span3'),
+        button = document.querySelector('button'),
+        comment = document.querySelector('.comment'),
+        lis = document.querySelector('li'),
+        num1 = document.querySelector('.num1');
+        num = document.querySelector('.num');
+
+
+    text.onkeyup = function(){
+        span1.innerText= this.value.trim().length;
+        span2.innerText = 100 - text.value.trim().length;
+        span3.innerText = text.value.trim().length-100;
+        if(this.value.trim().length>=100){
+        	num1.style.display = 'block';
+        	num.style.display = 'none';
+        }
+    }
+    button.onclick  = function(){
+            let st = text.value.trim();
+            if(st.length==0||st.length>100){
+            	return ;
+            }
+            let ele = document.createElement('li');
+	        comment.appendChild(ele)
+	        ele.innerText = text.value;
+	        text.value = ' ';
+            
+            
+    }
+    document.onkeydown = function(e){
+    	let st = text.value.trim();
+            if(st.length==0||st.length>100){
+            	return ;
+            }
+        let ele = document.createElement('li');
+        if(e.keyCode==13&&e.shiftKey){
+            comment.appendChild(ele)
+            ele.innerText = text.value;
+            text.value = ' ';
+        }
+    }
+
+
+</script>
+
+<!--
+
+span.innertext = limit -len
+sllice(0,100)-->

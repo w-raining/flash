@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>滚轮事件</title>
+</head>
+<style>
+    .box{
+        width:100px;
+        height:100px;
+    }
+    .box>img{
+        width:100%;
+        height:100%;
+    }
+</style>
+<body>
+    <div class="box">
+        <img src="img/1.jpg" alt="">
+    </div>
+</body>
+</html>
+<script>
+    //mousewheel   //鼠标滚轮事件
+    //e.wheelDelta    //向下：120        向上：+120       120可以用来进行判断          谷歌
+    /*document.addEventListener('mousewheel',function(e){
+        console.log(e.wheelDelta)
+    },false)
+    document.addEventListener('DOMMouseScroll',function(e){                //火狐：3   -3
+        console.log(e.detail)
+    },false)*/
+    let box = document.querySelector('.box'),
+        speed=10;
+//    console.log(imgw)
+    box.addEventListener('mousewheel',function(e){
+        let dir = e.wheelDelta;
+        e.preventDefault();        //屏蔽浏览器的默认行为
+
+        if(dir==120){
+                let imgw = box.offsetWidth;
+                let imgh = box.offsetHeight;
+                box.style.width = imgw + speed + 'px';
+                box.style.height = imgh + speed + 'px';
+                if((imgw>=300&&imgh>=300)){
+                    box.style.width = 300 + 'px';
+                    box.style.height = 300 + 'px';
+                }
+        }
+        else if(dir==-120){
+                let imgw = box.offsetWidth;
+                let imgh = box.offsetHeight;
+                box.style.width = (imgw - speed) + 'px';
+                box.style.height = (imgh - speed)+ 'px';
+                if((imgw<=100&&imgh<=100)){
+                    box.style.width = 100 + 'px';
+                    box.style.height = 100 + 'px';
+                }
+        }
+    },false)
+    document.onkeydown =function(e){
+        console.log(e.keyCode)
+    }
+</script>
+
+
+<!--downfn.call(obj)   apply
+冒充的方法
+call 和apply 的区别
+call  传的单个的元素  用，隔开     1,2,3,5,6,8
+apply   传的是数组   将参数放在数组里面
+
+onmouseover   向某个元素的子元素里移入鼠标的时候会不停的触发事件
+onmouseenter   向某个元素的子元素里移入鼠标的时候不会触发事件   真正的移入事件
+box.onmouseenter = funciton(e){
+    e.fromElement;  鼠标从哪来
+    e.toElement;    鼠标到哪去
+}
+
+
+
+
+
+键盘事件
+keydown   keyup   keyon
+document.onkeydown =function(e){    键盘码不区分大小写  a  A的键盘码是一样的65
+    console.log(e.keyCode)
+
+    if(e.shiftKey){        判断shift键是否按下
+    }
+}
+
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
